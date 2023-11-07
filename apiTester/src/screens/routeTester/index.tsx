@@ -57,25 +57,30 @@ const RouteTester = () => {
 
     const renderBodyField = (bodyField: { name: string, value: string }, index: number) => {
         return (
-            <Grid2 xs={5} key={`bodyField-${index}`} >
-                <TextField value={bodyField.name} key={`bodyField-${index}-name`} label="Property Name"
-                    onChange={(e) => {
-                        updateBodyField(index, e.target.value, bodyFields[index].value);
-                    }}
-                />
-
-                <TextField value={bodyField.value} key={`bodyField-${index}-value `} label="Property Value"
-                    onChange={(e) => {
-                        updateBodyField(index, bodyFields[index].name, e.target.value);
-                    }}
-                />
+            <Grid2 xs={12} key={`bodyField-${index}`} >
+                <Grid2 container>
+                    <Grid2 xs={6}>
+                        <TextField value={bodyField.name} key={`bodyField-${index}-name`} label="Property Name"
+                            onChange={(e) => {
+                                updateBodyField(index, e.target.value, bodyFields[index].value);
+                            }}
+                        />
+                    </Grid2>
+                    <Grid2 xs={6}>
+                        <TextField value={bodyField.value} key={`bodyField-${index}-value `} label="Property Value"
+                            onChange={(e) => {
+                                updateBodyField(index, bodyFields[index].name, e.target.value);
+                            }}
+                        />
+                    </Grid2>
+                </Grid2>
             </Grid2>
         )
     }
     const renderBodyFields = useMemo(() => {
 
         return (
-            <Grid2 container>
+            <Grid2 container direction={"column"}>
                 {bodyFields.map((bodyField, index) => renderBodyField(bodyField, index))}
             </Grid2>
         );

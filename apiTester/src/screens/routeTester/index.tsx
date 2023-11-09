@@ -24,8 +24,24 @@ const RouteTester = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: (methodText ? methodText == "HEAD" ? JSON.stringify({ 'text': text }) : null : null)
+            body: ""
         }
+
+        if (methodText && methodText != "GET") {
+            const body: { [key: string]: string } = {}
+            //JSON.stringify({ 'text': text })
+            //Get bodyFields
+            bodyFields.forEach(bodyField => {
+                body[bodyField.name] = bodyField.value;
+            });
+
+            options.body = JSON.stringify(body);
+        }
+        else {
+            options.body = JSON.stringify({});
+        }
+
+        console.log(`req body: ${options.body}`)
 
         fetch(`${urlText}/${pathText}`, options)
             .then(res => res.text())
@@ -33,9 +49,12 @@ const RouteTester = () => {
                 console.log(data)
                 setResponseText(data)
             })
-    }, [pathText, methodText, text])
+    }, [pathText, methodText, bodyFields])
 
-    const updateBodyField = (index: number, name: string, value: string) => {
+    const updateBodyField = useCallback((index: number, name: string, value: string) => {
+        console.log("updating body fields")
+        console.log(name)
+        console.log(value)
         setBodyFields(bodyFields.map((element, currentIndex) => {
             if (currentIndex == index) {
                 return { name: name, value: value }
@@ -44,7 +63,7 @@ const RouteTester = () => {
                 return element;
             }
         }))
-    }
+    }, [bodyFields]);
 
     const addBodyField = useCallback(() => {
         let newBodyField: bodyFields = { name: "", value: "" }
@@ -78,13 +97,12 @@ const RouteTester = () => {
         )
     }
     const renderBodyFields = useMemo(() => {
-
         return (
             <Grid2 container direction={"column"}>
                 {bodyFields.map((bodyField, index) => renderBodyField(bodyField, index))}
             </Grid2>
         );
-    }, [bodyFields.length])
+    }, [bodyFields])
 
     return (
         <Grid2 container alignItems="center" justifyContent="center" direction="column">
